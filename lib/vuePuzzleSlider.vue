@@ -105,16 +105,16 @@
         showPop: false,
         ending: false, // 关闭弹窗
         imgList: [
-          require("./style/img1.png"),
-          require("./style/img2.png"),
-          require("./style/img3.png"),
-          require("./style/img4.png"),
-          require("./style/img5.png"),
-          require("./style/img6.png"),
-          require("./style/img7.png"),
-          require("./style/img8.png"),
-          require("./style/img9.png"),
-          require("./style/img10.png")
+          '/static/vue-puzzle-slider-source/img1.png',
+          '/static/vue-puzzle-slider-source/img2.png',
+          '/static/vue-puzzle-slider-source/img3.png',
+          '/static/vue-puzzle-slider-source/img4.png',
+          '/static/vue-puzzle-slider-source/img5.png',
+          '/static/vue-puzzle-slider-source/img6.png',
+          '/static/vue-puzzle-slider-source/img7.png',
+          '/static/vue-puzzle-slider-source/img8.png',
+          '/static/vue-puzzle-slider-source/img9.png',
+          '/static/vue-puzzle-slider-source/img10.png'
         ],
         testWidth: 50, // 碎片儿宽
         testHeight: 50, // 碎片儿高
@@ -171,6 +171,7 @@
       }
     },
     mounted() {
+      console.log(this.imgList)
       let it = this;
       setTimeout(() => {
         it.loadBtn = false;

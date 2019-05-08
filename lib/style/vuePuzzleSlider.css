@@ -16,10 +16,10 @@
   position: relative;
 }
 .vue-puzzle-slider .source {
-  background: url("source.png") no-repeat;
+  background: url("/static/vue-puzzle-slider-source/source.png") no-repeat;
 }
 .vue-puzzle-slider .source2 {
-  background: url("source2.png") no-repeat;
+  background: url("/static/vue-puzzle-slider-source/source2.png") no-repeat;
 }
 .vue-puzzle-slider .load-btn,
 .vue-puzzle-slider .test-btn,
@@ -165,7 +165,7 @@
   width: 32px;
   height: 32px;
   background-size: contain;
-  background-image: url("load_content.gif");
+  background-image: url("/static/vue-puzzle-slider-source/load_content.gif");
 }
 .vue-puzzle-slider .reg-pop .load-content p {
   text-align: center;

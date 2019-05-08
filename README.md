@@ -3,6 +3,9 @@
 ## 安装
 	npm i vue-puzzle-slider
 
+## 0. 使用前提
+将包中的static文件夹下的文件放到本地static文件夹下
+
 ## 1. 参数
 * `v-model`：v-model双向绑定数据-->Boolean;非必传
 * `showBtn`：是否显示点击按钮-->Boolean;非必传;默认*true*
