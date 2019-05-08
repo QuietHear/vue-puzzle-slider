@@ -4,7 +4,7 @@
 */
 /*
 * @LastEditors: aFei
-* @LastEditTime: 2019-05-08 14:29:31
+* @LastEditTime: 2019-05-08 17:04:21
 */
 <template>
   <div class="vue-puzzle-slider" :style="{width:w,height:h}">
@@ -171,7 +171,6 @@
       }
     },
     mounted() {
-      console.log(this.imgList)
       let it = this;
       setTimeout(() => {
         it.loadBtn = false;
@@ -396,7 +395,6 @@
       },
       dragMove(e) { // 拖拽进行中
         if (this.moveBtnStatus === 1) {
-          console.log('move')
           if (e.pageX - this.beginPageX < 0) {
             this.$refs.dragBtn.style.left = '0px';
             this.$refs.testOne.style.left = this.moveMin + 'px';
