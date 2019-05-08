@@ -1,0 +1,41 @@
+{
+  "name": "vue-puzzle-slider",
+  "description": "vue版 滑动拼图",
+  "version": "1.0.0",
+  "author": "aFei <1106728884@qq.com>",
+  "license": "MIT",
+  "main": "dist/vue-puzzle-slider.min.js",
+  "private": false,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "keywords": [
+    "Vue",
+    "puzzleSlider",
+    "REG"
+  ],
+  "homepage": "https://github.com/QuietHear/vue-puzzle-slider",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-helper-vue-jsx-merge-props": "^2.0.3",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.4",
+    "uglifyjs-webpack-plugin": "^1.1.1",
+    "vue": "^2.5.11",
+    "vue-loader": "^13.0.5",
+    "vue-router": "^3.0.6",
+    "vue-style-loader": "^3.0.1",
+    "vue-template-compiler": "^2.4.4",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
+  }
+}

@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+npm-debug.log
+yarn-error.log
+src/lang/
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.tgz
+*.html
+package-lock.json
+lib/
+webpack.config.js
+.babelrc
+.editorconfig
