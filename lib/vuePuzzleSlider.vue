@@ -4,7 +4,7 @@
 */
 /*
 * @LastEditors: aFei
-* @LastEditTime: 2019-05-08 17:04:21
+* @LastEditTime: 2019-05-10 16:42:17
 */
 <template>
   <div class="vue-puzzle-slider" :style="{width:w,height:h}">
@@ -27,7 +27,7 @@
       验证中
     </div>
     <div class="success-btn" v-if="successBtn && showBtn">
-      <span class="source2"></span>验证成功
+      <span class="source"></span>验证成功
     </div>
     <div class="reg-pop" v-if="showPop"
          @mousemove="dragMove"
@@ -80,13 +80,13 @@
             <div class="mask"></div>
           </div>
           <div class="in">
-            <div class="source2"></div>
+            <div class="source"></div>
           </div>
         </div>
         <p>通过验证</p>
       </div>
       <div class="times-content" v-if="timesContent">
-        <div class="source2"></div>
+        <div class="source"></div>
         <p>尝试过多</p>
         <p class="else" @click="doAgain">请点击此处重试</p>
       </div>
@@ -104,18 +104,6 @@
         successBtn: false, // 成功按钮
         showPop: false,
         ending: false, // 关闭弹窗
-        imgList: [
-          '/static/vue-puzzle-slider-source/img1.png',
-          '/static/vue-puzzle-slider-source/img2.png',
-          '/static/vue-puzzle-slider-source/img3.png',
-          '/static/vue-puzzle-slider-source/img4.png',
-          '/static/vue-puzzle-slider-source/img5.png',
-          '/static/vue-puzzle-slider-source/img6.png',
-          '/static/vue-puzzle-slider-source/img7.png',
-          '/static/vue-puzzle-slider-source/img8.png',
-          '/static/vue-puzzle-slider-source/img9.png',
-          '/static/vue-puzzle-slider-source/img10.png'
-        ],
         testWidth: 50, // 碎片儿宽
         testHeight: 50, // 碎片儿高
         testX: 0, // 碎片儿距离左边距离
@@ -168,6 +156,23 @@
       showBtn: {
         type: Boolean,
         default: true
+      },
+      imgList: {
+        type: Array,
+        default: ()=>{
+          return [
+            '/static/vue-puzzle-slider-source/img1.png',
+            '/static/vue-puzzle-slider-source/img2.png',
+            '/static/vue-puzzle-slider-source/img3.png',
+            '/static/vue-puzzle-slider-source/img4.png',
+            '/static/vue-puzzle-slider-source/img5.png',
+            '/static/vue-puzzle-slider-source/img6.png',
+            '/static/vue-puzzle-slider-source/img7.png',
+            '/static/vue-puzzle-slider-source/img8.png',
+            '/static/vue-puzzle-slider-source/img9.png',
+            '/static/vue-puzzle-slider-source/img10.png'
+          ];
+        }
       }
     },
     mounted() {
