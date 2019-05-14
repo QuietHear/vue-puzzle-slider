@@ -4,7 +4,7 @@
 */
 /*
 * @LastEditors: aFei
-* @LastEditTime: 2019-05-10 16:42:17
+* @LastEditTime: 2019-05-14 16:29:43
 */
 <template>
   <div class="vue-puzzle-slider" :style="{width:w,height:h}">
@@ -87,8 +87,12 @@
       </div>
       <div class="times-content" v-if="timesContent">
         <div class="source"></div>
-        <p>尝试过多</p>
-        <p class="else" @click="doAgain">请点击此处重试</p>
+        <p>{{errMsg}}</p>
+        <div class="error-msg">
+          <span @click="doAgain">请点击此处重试</span>
+          <em v-if="errMsg!=='尝试过多'"> or </em>
+          <span @click="elseClose" v-if="errMsg!=='尝试过多'">关闭验证</span>
+        </div>
       </div>
     </div>
   </div>
@@ -134,7 +138,9 @@
         time: 0, // 拼图时间
         percentage: 0, // 拼图效率百分比
         timeInit: null, // 拼图时间
-        refresh: false // 刷新中
+        refresh: false, // 刷新中
+        errMsg: '尝试过多', // 错误信息
+        token: '', // 当前唯一值
       }
     },
     model: {
@@ -142,8 +148,17 @@
       event: 'changeValue'
     },
     props: {
+      url1: {
+        type: String,
+        required: true
+      },
+      url2: {
+        type: String,
+        required: true
+      },
       value: {
-        type: Boolean
+        type: String,
+        default: ''
       },
       w: {
         type: String,
@@ -159,7 +174,7 @@
       },
       imgList: {
         type: Array,
-        default: ()=>{
+        default: () => {
           return [
             '/static/vue-puzzle-slider-source/img1.png',
             '/static/vue-puzzle-slider-source/img2.png',
@@ -229,110 +244,134 @@
         this.times += 1;
         if (this.times > this.timesMax) {
           this.testContent = false;
+          this.errMsg = '尝试过多';
           this.timesContent = true;
         } else {
           this.refresh = true;
-          let it = this;
-          setTimeout(() => {
-            it.refresh = false;
-            let c = it.$refs.right,
-              c_lost = it.$refs.testLost,
-              c_one = it.$refs.testOne,
-              ctx = c.getContext("2d"),
-              ctx_lost = c_lost.getContext("2d"),
-              ctx_one = c_one.getContext("2d"),
-              img = it.newImg();
-            it.testPath = [...it.randomPath()];
-            it.testr = Math.floor(Math.random() * (it.testrMax - it.testrMin + 1) + it.testrMin); // （左开右闭区间，+1）
-            it.testXMin = 10 + it.testWidth / 2;
-            it.testXMax = c.width - 10 - it.testWidth;
-            it.testYMin = 10;
-            it.testYMax = c.height - 10 - it.testHeight;
-            for (let i = 0; i < it.testPath.length; i++) {
-              if (it.testPath[i].direction === 'left' && it.testPath[i].much === 'outside') {
-                it.testXMin = 10 + it.testr + it.testWidth / 2;
-              } else if (it.testPath[i].direction === 'right' && it.testPath[i].much === 'outside') {
-                it.testXMax = c.width - it.testr - 10 - it.testWidth;
-              } else if (it.testPath[i].direction === 'top' && it.testPath[i].much === 'outside') {
-                it.testYMin = 10 + it.testr;
-              } else if (it.testPath[i].direction === 'bottom' && it.testPath[i].much === 'outside') {
-                it.testYMax = c.height - it.testr - 10 - it.testHeight;
+          this.$get(this.url1, {
+            r: this.testrMax,
+            squareX: this.testWidth,
+            width: this.$refs.right.width,
+            height: this.$refs.right.height
+          }).then(data => {
+            if (data.code === 200) {
+              this.token = data.data.code;
+              let it = this;
+              setTimeout(() => {
+                it.refresh = false;
+                let c = it.$refs.right,
+                  c_lost = it.$refs.testLost,
+                  c_one = it.$refs.testOne,
+                  ctx = c.getContext("2d"),
+                  ctx_lost = c_lost.getContext("2d"),
+                  ctx_one = c_one.getContext("2d"),
+                  img = it.newImg();
+                it.testPath = [...it.randomPath()];
+                it.testr = Math.floor(Math.random() * (it.testrMax - it.testrMin + 1) + it.testrMin); // （左开右闭区间，+1）
+                it.testXMin = 10 + it.testWidth / 2;
+                it.testXMax = c.width - 10 - it.testWidth;
+                it.testYMin = 10;
+                it.testYMax = c.height - 10 - it.testHeight;
+                for (let i = 0; i < it.testPath.length; i++) {
+                  if (it.testPath[i].direction === 'left' && it.testPath[i].much === 'outside') {
+                    it.testXMin = 10 + it.testr + it.testWidth / 2;
+                  } else if (it.testPath[i].direction === 'right' && it.testPath[i].much === 'outside') {
+                    it.testXMax = c.width - it.testr - 10 - it.testWidth;
+                  } else if (it.testPath[i].direction === 'top' && it.testPath[i].much === 'outside') {
+                    it.testYMin = 10 + it.testr;
+                  } else if (it.testPath[i].direction === 'bottom' && it.testPath[i].much === 'outside') {
+                    it.testYMax = c.height - it.testr - 10 - it.testHeight;
+                  }
+                }
+                it.testX = Math.floor(Math.random() * (it.testXMax - it.testXMin + 1) + it.testXMin); //（左开右闭区间，+1）
+                // it.testX = data.data.x;
+                it.testY = Math.floor(Math.random() * (it.testYMax - it.testYMin + 1) + it.testYMin); //（左开右闭区间，+1）
+                // it.testY = data.data.y;
+                it.moveMin = -it.testX + it.testXMin - it.testWidth / 2;
+                it.moveMax = it.testXMax - it.testX;
+                c_one.style.left = it.moveMin + 'px';
+                ctx.clearRect(0, 0, c.width, c.height);
+                ctx_lost.clearRect(0, 0, c_lost.width, c_lost.height);
+                ctx_lost.clearRect(0, 0, c_lost.width, c_lost.height);
+                ctx_one.clearRect(0, 0, c_one.width, c_one.height);
+                img.onload = () => {
+                  // 画正确图片
+                  ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, c.width, c.height);
+
+                  // 画缺口图片
+                  ctx_lost.save();
+                  ctx_lost.drawImage(img, 0, 0, img.width, img.height, 0, 0, c.width, c.height);
+                  ctx_lost.beginPath();
+                  ctx_lost.moveTo(it.testX, it.testY);
+                  it.testPath.forEach(item => {
+                    item.direction === 'top' ? it.drawCircle(ctx_lost, item) : '';
+                  });
+                  ctx_lost.lineTo(it.testX + it.testWidth, it.testY);
+                  it.testPath.forEach(item => {
+                    item.direction === 'right' ? it.drawCircle(ctx_lost, item) : '';
+                  });
+                  ctx_lost.lineTo(it.testX + it.testWidth, it.testY + it.testHeight);
+                  it.testPath.forEach(item => {
+                    item.direction === 'bottom' ? it.drawCircle(ctx_lost, item) : '';
+                  });
+                  ctx_lost.lineTo(it.testX, it.testY + it.testHeight);
+                  it.testPath.forEach(item => {
+                    item.direction === 'left' ? it.drawCircle(ctx_lost, item) : '';
+                  });
+                  ctx_lost.lineTo(it.testX, it.testY);
+                  ctx_one.closePath();
+                  ctx_lost.fillStyle = 'rgba(0,0,0,.5)';
+                  ctx_lost.fill();
+                  ctx_lost.restore();
+
+                  // 画碎片
+                  ctx_one.strokeStyle = '#F6F152';
+                  ctx_one.lineWidth = 2;
+                  ctx_one.shadowBlur = 5;
+                  ctx_one.shadowOffsetX = 0;
+                  ctx_one.shadowOffsetY = 0;
+                  ctx_one.shadowColor = 'black';
+                  ctx_one.save();
+                  ctx_one.beginPath();
+                  ctx_one.moveTo(it.testX, it.testY);
+                  it.testPath.forEach(item => {
+                    item.direction === 'top' ? it.drawCircle(ctx_one, item) : '';
+                  });
+                  ctx_one.lineTo(it.testX + it.testWidth, it.testY);
+                  it.testPath.forEach(item => {
+                    item.direction === 'right' ? it.drawCircle(ctx_one, item) : '';
+                  });
+                  ctx_one.lineTo(it.testX + it.testWidth, it.testY + it.testHeight);
+                  it.testPath.forEach(item => {
+                    item.direction === 'bottom' ? it.drawCircle(ctx_one, item) : '';
+                  });
+                  ctx_one.lineTo(it.testX, it.testY + it.testHeight);
+                  it.testPath.forEach(item => {
+                    item.direction === 'left' ? it.drawCircle(ctx_one, item) : '';
+                  });
+                  ctx_one.lineTo(it.testX, it.testY);
+                  ctx_one.closePath();
+                  ctx_one.stroke();
+                  ctx_one.stroke();
+                  ctx_one.stroke();
+                  ctx_one.clip();
+                  ctx_one.drawImage(img, 0, 0, img.width, img.height, 0, 0, c.width, c.height);
+                  ctx_one.restore();
+                };
+              }, 1000);
+            } else {
+              try {
+                throw new ReferenceError(data.message ? data.message : data.msg);
+              } catch (e) {
+                alert(e);
+              } finally {
+                this.token = '';
+                this.testContent = false;
+                this.errMsg = '网络超时';
+                this.timesContent = true;
               }
             }
-            it.testX = Math.floor(Math.random() * (it.testXMax - it.testXMin + 1) + it.testXMin); //（左开右闭区间，+1）
-            it.testY = Math.floor(Math.random() * (it.testYMax - it.testYMin + 1) + it.testYMin); //（左开右闭区间，+1）
-            it.moveMin = -it.testX + it.testXMin - it.testWidth / 2;
-            it.moveMax = it.testXMax - it.testX;
-            c_one.style.left = it.moveMin + 'px';
-            ctx.clearRect(0, 0, c.width, c.height);
-            ctx_lost.clearRect(0, 0, c_lost.width, c_lost.height);
-            ctx_lost.clearRect(0, 0, c_lost.width, c_lost.height);
-            ctx_one.clearRect(0, 0, c_one.width, c_one.height);
-            img.onload = () => {
-              // 画正确图片
-              ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, c.width, c.height);
-
-              // 画缺口图片
-              ctx_lost.save();
-              ctx_lost.drawImage(img, 0, 0, img.width, img.height, 0, 0, c.width, c.height);
-              ctx_lost.beginPath();
-              ctx_lost.moveTo(it.testX, it.testY);
-              it.testPath.forEach(item => {
-                item.direction === 'top' ? it.drawCircle(ctx_lost, item) : '';
-              });
-              ctx_lost.lineTo(it.testX + it.testWidth, it.testY);
-              it.testPath.forEach(item => {
-                item.direction === 'right' ? it.drawCircle(ctx_lost, item) : '';
-              });
-              ctx_lost.lineTo(it.testX + it.testWidth, it.testY + it.testHeight);
-              it.testPath.forEach(item => {
-                item.direction === 'bottom' ? it.drawCircle(ctx_lost, item) : '';
-              });
-              ctx_lost.lineTo(it.testX, it.testY + it.testHeight);
-              it.testPath.forEach(item => {
-                item.direction === 'left' ? it.drawCircle(ctx_lost, item) : '';
-              });
-              ctx_lost.lineTo(it.testX, it.testY);
-              ctx_one.closePath();
-              ctx_lost.fillStyle = 'rgba(0,0,0,.5)';
-              ctx_lost.fill();
-              ctx_lost.restore();
-
-              // 画碎片
-              ctx_one.strokeStyle = '#F6F152';
-              ctx_one.lineWidth = 2;
-              ctx_one.shadowBlur = 5;
-              ctx_one.shadowOffsetX = 0;
-              ctx_one.shadowOffsetY = 0;
-              ctx_one.shadowColor = 'black';
-              ctx_one.save();
-              ctx_one.beginPath();
-              ctx_one.moveTo(it.testX, it.testY);
-              it.testPath.forEach(item => {
-                item.direction === 'top' ? it.drawCircle(ctx_one, item) : '';
-              });
-              ctx_one.lineTo(it.testX + it.testWidth, it.testY);
-              it.testPath.forEach(item => {
-                item.direction === 'right' ? it.drawCircle(ctx_one, item) : '';
-              });
-              ctx_one.lineTo(it.testX + it.testWidth, it.testY + it.testHeight);
-              it.testPath.forEach(item => {
-                item.direction === 'bottom' ? it.drawCircle(ctx_one, item) : '';
-              });
-              ctx_one.lineTo(it.testX, it.testY + it.testHeight);
-              it.testPath.forEach(item => {
-                item.direction === 'left' ? it.drawCircle(ctx_one, item) : '';
-              });
-              ctx_one.lineTo(it.testX, it.testY);
-              ctx_one.closePath();
-              ctx_one.stroke();
-              ctx_one.stroke();
-              ctx_one.stroke();
-              ctx_one.clip();
-              ctx_one.drawImage(img, 0, 0, img.width, img.height, 0, 0, c.width, c.height);
-              ctx_one.restore();
-            };
-          }, 1000);
+          });
         }
       },
       newImg() { // 输出图片
@@ -424,73 +463,90 @@
         }
       },
       checkResult() { // 检测结果
-        if (parseFloat(this.$refs.testOne.style.left) <= 5 && parseFloat(this.$refs.testOne.style.left) >= -5) {
-          if (this.percentage < 0) { // 超时
-            this.testSuccess = false;
-            this.popAnimate = 'wrong';
-            let it = this;
-            setTimeout(() => {
-              it.$refs.testOne.style.opacity = 0;
+        this.$post(this.url2, {
+          x: parseInt(this.$refs.testOne.style.left) - this.moveMin,
+          code: this.token
+        }).then(data => {
+          if (data.code === 200) {
+            if (this.percentage < 0) { // 超时
+              this.testSuccess = false;
+              this.popAnimate = 'wrong';
+              let it = this;
               setTimeout(() => {
-                it.popAnimate = '';
+                it.$refs.testOne.style.opacity = 0;
+                setTimeout(() => {
+                  it.popAnimate = '';
+                  it.testStatus = 0;
+                  it.$refs.dragBtn.style.left = '0px';
+                  it.$refs.testOne.style.left = this.moveMin + 'px';
+                  it.$refs.testOne.style.opacity = 1;
+                  setTimeout(() => {
+                    it.moveTxtStatus = 0;
+                    it.moveBtnStatus = 0;
+                  }, 500)
+                }, 500);
+              }, 1000);
+            } else {
+              this.testSuccess = true;
+              this.popAnimate = 'success';
+              let it = this;
+              setTimeout(() => {
                 it.testStatus = 0;
-                it.$refs.dragBtn.style.left = '0px';
-                it.$refs.testOne.style.left = this.moveMin + 'px';
-                it.$refs.testOne.style.opacity = 1;
+                it.testContent = false;
+                it.successContent = true;
                 setTimeout(() => {
-                  it.moveTxtStatus = 0;
-                  it.moveBtnStatus = 0;
-                }, 500)
-              }, 500);
-            }, 1000);
-          } else {
-            this.testSuccess = true;
-            this.popAnimate = 'success';
-            let it = this;
-            setTimeout(() => {
-              it.testStatus = 0;
-              it.testContent = false;
-              it.successContent = true;
+                  window.removeEventListener('click', it.popListener, false);
+                  it.testBtn = false;
+                  it.ending = true;
+                  setTimeout(() => {
+                    this.ending = false;
+                    it.showPop = false;
+                    it.successBtn = true;
+                    it.$emit('changeValue', data.data);
+                    it.$emit('change', true, data.data);
+                  }, 1000);
+                }, 1100);
+              }, 1000);
+            }
+          } else if (data.code === 123) { // 拼接错误
+            this.times += 1;
+            if (this.times > this.timesMax) {
+              this.testContent = false;
+              this.errMsg = '尝试过多';
+              this.timesContent = true;
+            } else {
+              this.percentage = 1; // 临时修改数据，区别超时的情况
+              this.testSuccess = false;
+              this.popAnimate = 'wrong';
+              let it = this;
               setTimeout(() => {
-                window.removeEventListener('click', it.popListener, false);
-                it.testBtn = false;
-                it.ending = true;
+                it.$refs.testOne.style.opacity = 0;
                 setTimeout(() => {
-                  this.ending = false;
-                  it.showPop = false;
-                  it.successBtn = true;
-                  it.$emit('changeValue', true);
-                  it.$emit('change', true);
-                }, 1000);
-              }, 1100);
-            }, 1000);
-          }
-        } else { // 拼接错误
-          this.times += 1;
-          if (this.times > this.timesMax) {
-            this.testContent = false;
-            this.timesContent = true;
+                  it.popAnimate = '';
+                  it.testStatus = 0;
+                  it.$refs.dragBtn.style.left = '0px';
+                  it.$refs.testOne.style.left = this.moveMin + 'px';
+                  it.$refs.testOne.style.opacity = 1;
+                  setTimeout(() => {
+                    it.moveTxtStatus = 0;
+                    it.moveBtnStatus = 0;
+                  }, 500)
+                }, 500);
+              }, 1000);
+            }
           } else {
-            this.percentage = 1; // 临时修改数据，区别超时的情况
-            this.testSuccess = false;
-            this.popAnimate = 'wrong';
-            let it = this;
-            setTimeout(() => {
-              it.$refs.testOne.style.opacity = 0;
-              setTimeout(() => {
-                it.popAnimate = '';
-                it.testStatus = 0;
-                it.$refs.dragBtn.style.left = '0px';
-                it.$refs.testOne.style.left = this.moveMin + 'px';
-                it.$refs.testOne.style.opacity = 1;
-                setTimeout(() => {
-                  it.moveTxtStatus = 0;
-                  it.moveBtnStatus = 0;
-                }, 500)
-              }, 500);
-            }, 1000);
+            try {
+              throw new ReferenceError(data.message ? data.message : data.msg);
+            } catch (e) {
+              alert(e);
+            } finally {
+              this.token = '';
+              this.testContent = false;
+              this.errMsg = '网络超时';
+              this.timesContent = true;
+            }
           }
-        }
+        });
       },
       closePop() { // 关闭弹窗
         if (this.testContent === true && this.popAnimate !== 'success') {
@@ -505,10 +561,17 @@
             it.moveBtnStatus = 0;
             this.ending = false;
             it.showPop = false;
-            this.$emit('changeValue', false);
-            this.$emit('change', false);
+            this.$emit('changeValue', '');
+            this.$emit('change', false, '');
           }, 1000);
         }
+      },
+      elseClose() { // 错误弹窗的关闭
+        window.removeEventListener('click', this.popListener, false);
+        this.showPop = false;
+        this.timesContent = false;
+        this.$emit('changeValue', '');
+        this.$emit('change', false, '');
       }
     }
   }

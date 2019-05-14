@@ -4,7 +4,7 @@
 */
 /*
 * @LastEditors: aFei
-* @LastEditTime: 2019-05-10 16:43:02
+* @LastEditTime: 2019-05-10 16:25:54
 */
 * {
   padding: 0;
@@ -319,7 +319,7 @@
           background-position: 0 -44px;
 
           &.drag {
-            background-position:  -62px -44px;
+            background-position: -62px -44px;
           }
 
           &.drag-end {
@@ -428,27 +428,35 @@
     .times-content {
       padding-top: 23px;
 
-      div {
+      .source {
         margin: 0 auto;
         width: 24px;
         height: 24px;
         background-position: -62px -138px;
       }
 
-      p {
+      .error-msg {
+        white-space: nowrap;
+
+        em {
+          font-style: normal;
+        }
+
+        span {
+          text-decoration: underline;
+          margin-top: 3px;
+          color: #0088f7;
+          cursor: pointer;
+        }
+      }
+
+      p, .error-msg {
         text-align: center;
         font-size: 14px;
         line-height: 14px;
         margin-top: 10px;
         color: #595959;
         user-select: none;
-
-        &.else {
-          text-decoration: underline;
-          margin-top: 3px;
-          color: #0088f7;
-          cursor: pointer;
-        }
       }
     }
 
@@ -652,4 +660,3 @@
     }
   }
 }
-
