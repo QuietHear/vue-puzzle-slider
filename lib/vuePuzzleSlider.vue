@@ -4,7 +4,7 @@
 */
 /*
 * @LastEditors: aFei
-* @LastEditTime: 2019-05-14 16:29:43
+* @LastEditTime: 2019-05-22 11:13:44
 */
 <template>
   <div class="vue-puzzle-slider" :style="{width:w,height:h}">
@@ -301,6 +301,8 @@
                   // 画缺口图片
                   ctx_lost.save();
                   ctx_lost.drawImage(img, 0, 0, img.width, img.height, 0, 0, c.width, c.height);
+                  ctx_lost.strokeStyle = 'rgba(255,255,255,.4)';
+                  ctx_lost.lineWidth = 1;
                   ctx_lost.beginPath();
                   ctx_lost.moveTo(it.testX, it.testY);
                   it.testPath.forEach(item => {
@@ -319,14 +321,17 @@
                     item.direction === 'left' ? it.drawCircle(ctx_lost, item) : '';
                   });
                   ctx_lost.lineTo(it.testX, it.testY);
-                  ctx_one.closePath();
-                  ctx_lost.fillStyle = 'rgba(0,0,0,.5)';
+                  ctx_lost.closePath();
+                  ctx_lost.stroke();
+                  ctx_lost.restore();
+                  ctx_lost.save();
+                  ctx_lost.fillStyle = 'rgba(0,0,0,.65)';
                   ctx_lost.fill();
                   ctx_lost.restore();
 
                   // 画碎片
                   ctx_one.strokeStyle = '#F6F152';
-                  ctx_one.lineWidth = 2;
+                  ctx_one.lineWidth = 3.5;
                   ctx_one.shadowBlur = 5;
                   ctx_one.shadowOffsetX = 0;
                   ctx_one.shadowOffsetY = 0;
