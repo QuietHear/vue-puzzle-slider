@@ -4,7 +4,7 @@
 */
 /*
  * @LastEditors: afei
- * @LastEditTime: 2020-12-09 12:23:17
+ * @LastEditTime: 2020-12-09 14:09:48
 */
 <template>
   <div class="vue-puzzle-slider" :style="{ width: w, height: h }">
@@ -382,7 +382,7 @@ export default {
                   Math.random() * (it.testYMax - it.testYMin + 1) + it.testYMin
                 ); //（左开右闭区间，+1）
               } else {
-                it.testX = res.data.x;
+                it.testX = this.decResult(res.data.x);
                 it.testY = res.data.y;
               }
               it.moveMin = -it.testX + it.testXMin - it.testWidth / 2;
@@ -520,6 +520,13 @@ export default {
           }
         });
       }
+    },
+    decResult(x) {
+      // 解密
+      let result = window.atob(result);
+      result = parseInt(result, 8);
+      result = Math.sqrt(result + 64);
+      return result;
     },
     newImg() {
       // 输出图片
@@ -679,7 +686,9 @@ export default {
     checkResult() {
       // 检测结果
       this["$" + this.url2Type](this.url2, {
-        x: parseInt(this.$refs.testOne.style.left) - this.moveMin,
+        x: this.encResult(
+          parseInt(this.$refs.testOne.style.left) - this.moveMin
+        ),
         time: this.time,
         token: this.token,
       }).then((res) => {
@@ -770,6 +779,13 @@ export default {
           }
         }
       });
+    },
+    encResult(x) {
+      // 加密
+      let result = (x + 4) * (x - 4);
+      result = result.toString(4);
+      result = window.btoa(result);
+      return result;
     },
     closePop() {
       // 关闭弹窗

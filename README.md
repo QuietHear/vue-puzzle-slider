@@ -1,11 +1,14 @@
 # vue版 滑动拼图
 
+
 ## 安装
 	npm i vue-puzzle-slider
+
 
 ## 0. 使用前提
 * 将包中的static文件夹下的文件放到本地static文件夹下
 * 安装了axios请求方式，并在全局封装了$get(get方式)和$post(post方式)
+* ul1与url2传输的x有独特的加密/解密方式,有需要可以留言
 * 范围值计算方式推荐
 >
 	xMin = space + r + squareX / 2;
@@ -13,6 +16,7 @@
 	yMin = space + r;
 	yMax = height - r - space - squareX;
 >
+
 
 ## 1. 参数
 * `dev`：前端调试模式，临时修改url1与url2返回的值-->Boolean;非必传;默认*false*
@@ -50,11 +54,10 @@
 
 * `@change`：触发验证监听-->第一个参数返回true/false，第二个参数返回验证加密码
 
+
 ## 2. 方法
 * `initPop`：手动触发验证-->建议showBtn为false时使用
 
 
 ## 3.待开发
-* url1时，三张验证图片传输（后台开发）
 * url2时，传递用户的行为数据分析（前端获取，后端验证）
-* url2时，传递用户的时长占比（后端验证）

@@ -1,7 +1,7 @@
 {
   "name": "vue-puzzle-slider",
   "description": "vue版 滑动拼图",
-  "version": "1.1.17",
+  "version": "1.2.0",
   "author": "aFei <1106728884@qq.com>",
   "license": "MIT",
   "main": "dist/vue-puzzle-slider.min.js",
