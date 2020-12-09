@@ -28,9 +28,11 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
+        loader: 'url-loader',
         options: {
           name: '[name].[ext]',
+          limit: 9999999,
+          esModule: false,
         },
       },
     ],
