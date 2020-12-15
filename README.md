@@ -33,24 +33,24 @@
 `height（假）`和
 `抠图位置信息x，y`的接口-->String;必传
 
-* `url1Type`：url1的http请求方式-->String;非必传;默认*'get'*
+* `url1-type`：url1的http请求方式-->String;非必传;默认*'get'*
 
 * `url2`：向后台传参`x（验证数据）`、
 `time（验证时间）`和
 `token（唯一校验）`,需要返回`code（请求状态码,123为拼接错误）`、`percentage（完成效率）`和
 `result（完成后的唯一值）`的接口-->String;必传
 
-* `url2Type`：url2的http请求方式-->String;非必传;默认*'post'*
+* `url2-type`：url2的http请求方式-->String;非必传;默认*'post'*
 
 * `v-model`：v-model双向绑定数据-->String;非必传
 
-* `showBtn`：是否显示点击按钮-->Boolean;非必传;默认*true*
+* `show-btn`：是否显示点击按钮-->Boolean;非必传;默认*true*
 
 * `w`：显示按钮的宽-->String;非必传;默认*'100%'*
 
 * `h`：显示按钮的高-->String;非必传;默认*'100%'*
 
-* `imgList`：拼图随机的图片路径列表-->Array;非必传;
+* `img-list`：拼图随机的图片路径列表-->Array;非必传;
 
 * `@change`：触发验证监听-->第一个参数返回true/false，第二个参数返回验证加密码
 
