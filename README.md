@@ -1,4 +1,5 @@
-# vue版 滑动拼图
+# 滑动拼图（vue2版）
+[**vue3版本**](https://github.com/QuietHear/vue-puzzle-slider-plus '浏览') | ***vue2版本*** 
 
 
 ## 安装
