@@ -5,6 +5,11 @@
 ## 安装
 	npm i vue-puzzle-slider
 
+## 使用
+	import vuePuzzleSlider from 'vue-puzzle-slider';
+	
+	Vue.use(vuePuzzleSlider);
+
 
 ## 0. 使用前提
 * 将包中的static文件夹下的文件放到本地static文件夹下
